@@ -9,4 +9,7 @@ test('Should render the header', async () => {
 
   const profileName = await screen.findByText(/Vonta/i)
   expect(profileName).toBeInTheDocument()
+
+  const bannerColor = screen.getByRole('banner', {})
+  expect(bannerColor).toHaveStyle({ background: 'var(--grey)' })
 })

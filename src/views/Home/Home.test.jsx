@@ -12,24 +12,35 @@ const user = {
   color: 'crimson',
 }
 
-test.only('Should render the user profile', async () => {
+test('Should render user with correct properties', async () => {
+  render(<Home user={user} />)
+  expect(user).toHaveProperty('id')
+  expect(user).toHaveProperty('created_at')
+  expect(user).toHaveProperty('name')
+  expect(user).toHaveProperty('avatar')
+  expect(user).toHaveProperty('header')
+  expect(user).toHaveProperty('likes')
+  expect(user).toHaveProperty('motto')
+  expect(user).toHaveProperty('color')
+})
+
+test('Should render the user profile', async () => {
   render(<Home user={user} />)
 
-  const profileName = screen.getByRole('heading', { name: /Vonta/i })
-  expect(profileName).toBeInTheDocument()
+  const { name, motto, likes } = user
 
-  const motto = await screen.findByText('Res Non Verba')
-  expect(motto).toBeInTheDocument()
-
+  const profileName = await screen.findByRole('heading', { name })
+  const mottoText = screen.getByText(motto)
   const interestsHeading = screen.getByRole('heading', { name: /Interests/i })
-  expect(interestsHeading).toBeInTheDocument()
+  const likesList = screen.getByRole('list')
 
   const avatar = screen.getByAltText(/avatar/i)
-  expect(avatar).toBeInTheDocument()
-
   const headerImage = screen.getByAltText(/header/i)
-  expect(headerImage).toBeInTheDocument()
 
-  const likesList = await screen.findAllByRole('listitem')
-  expect(likesList).toHaveLength(6)
+  expect(profileName).toBeInTheDocument()
+  expect(mottoText).toBeInTheDocument()
+  expect(interestsHeading).toBeInTheDocument()
+  expect(likesList.children.length).toEqual(likes.length)
+  expect(avatar).toBeInTheDocument()
+  expect(headerImage).toBeInTheDocument()
 })
